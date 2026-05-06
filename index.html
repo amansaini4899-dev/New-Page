@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Our Love Story</title>
+    <title>Himuflix</title>
     <link href="https://fonts.googleapis.com/css2?family=Helvetica+Neue:wght@400;700&display=swap" rel="stylesheet">
     <style>
         * {
@@ -37,6 +37,7 @@
         .profile-container {
             max-width: 1400px;
             width: 100%;
+            text-align: center;
         }
 
         .profile-header h1 {
@@ -54,6 +55,10 @@
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
             gap: 40px;
             margin-bottom: 60px;
+            justify-content: center;
+            max-width: 400px;
+            margin-left: auto;
+            margin-right: auto;
         }
 
         .profile-card {
@@ -100,6 +105,7 @@
             cursor: pointer;
             transition: all 0.3s ease;
             width: fit-content;
+            margin: 0 auto;
         }
 
         .manage-profiles:hover {
@@ -302,9 +308,13 @@
             z-index: 10;
         }
 
-        .thumbnail-card img {
+        .thumbnail-card img, .thumbnail-card video {
             width: 100%;
             height: 100%;
+            object-fit: cover;
+        }
+
+        .thumbnail-card video {
             object-fit: cover;
         }
 
@@ -334,6 +344,18 @@
             opacity: 0.8;
         }
 
+        .video-badge {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: #e50914;
+            color: white;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+
         /* Modal */
         .modal {
             display: none;
@@ -357,12 +379,33 @@
             max-width: 90%;
             max-height: 90%;
             border-radius: 8px;
+            position: relative;
         }
 
-        .modal-content img {
+        .modal-content img, .modal-content video {
             width: 100%;
             height: 100%;
             object-fit: contain;
+        }
+
+        .modal-content video {
+            max-width: 800px;
+            max-height: 600px;
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            font-size: 20px;
+            cursor: pointer;
+            z-index: 2001;
         }
 
         /* Floating hearts */
@@ -425,7 +468,7 @@
             }
 
             .profiles-grid {
-                grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+                grid-template-columns: 1fr;
                 gap: 30px;
             }
 
@@ -450,12 +493,6 @@
                     </div>
                     <span class="profile-name">My Love ❤️</span>
                 </div>
-                <div class="profile-card" onclick="goToMain()">
-                    <div class="profile-avatar">
-                        <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=400&fit=crop&crop=face" alt="Your Profile">
-                    </div>
-                    <span class="profile-name">Me 💝</span>
-                </div>
             </div>
             <button class="manage-profiles">Manage Profiles</button>
         </div>
@@ -472,7 +509,7 @@
         <nav class="navbar">
             <div class="nav-container">
                 <div class="nav-left">
-                    <h1 class="logo">Our Story ❤️</h1>
+                    <h1 class="logo">Himuflix ❤️</h1>
                 </div>
                 <div class="nav-right">
                     <button class="profile-btn" onclick="goToProfile()">
@@ -516,27 +553,110 @@
 
     <!-- Modal -->
     <div id="modal" class="modal" onclick="closeModal()">
-        <div class="modal-content" id="modalContent"></div>
+        <div class="modal-content" id="modalContent">
+            <button class="close-modal" onclick="closeModal()">×</button>
+        </div>
     </div>
 
     <script>
-        // Gallery data
+        // Gallery data with both photos and videos
         const galleryData = {
             memories: [
-                { type: 'photo', src: 'https://images.unsplash.com/photo-1516589178581-6cd7833ae3b2?w=600&h=400&fit=crop', title: 'Our First Date', date: '2023-01-15' },
-                { type: 'photo', src: 'https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?w=600&h=400&fit=crop', title: 'Beach Sunset', date: '2023-02-14' },
-                { type: 'photo', src: 'https://images.unsplash.com/photo-1519904981063-b0cf448d479e?w=600&h=400&fit=crop', title: 'Coffee Morning', date: '2023-04-10' },
-                { type: 'photo', src: 'https://images.unsplash.com/photo-1513475382585-d06e58bcb0e0?w=600&h=400&fit=crop', title: 'Dinner Together', date: '2023-05-20' }
+                { 
+                    type: 'photo', 
+                    src: 'https://images.unsplash.com/photo-1516589178581-6cd7833ae3b2?w=600&h=400&fit=crop', 
+                    title: 'Our First Date', 
+                    date: '2023-01-15',
+                    description: 'The beginning of everything beautiful'
+                },
+                { 
+                    type: 'video', 
+                    src: 'https://www.w3schools.com/html/mov_bbb.mp4', 
+                    title: 'Dancing Together', 
+                    date: '2023-02-14',
+                    description: 'Valentine\'s dance party'
+                },
+                { 
+                    type: 'photo', 
+                    src: 'https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?w=600&h=400&fit=crop', 
+                    title: 'Beach Sunset', 
+                    date: '2023-03-20',
+                    description: 'Perfect evening by the ocean'
+                },
+                { 
+                    type: 'video', 
+                    src: 'https://www.w3schools.com/html/movie.mp4', 
+                    title: 'Cooking Together', 
+                    date: '2023-04-10',
+                    description: 'Making memories in the kitchen'
+                },
+                { 
+                    type: 'photo', 
+                    src: 'https://images.unsplash.com/photo-1519904981063-b0cf448d479e?w=600&h=400&fit=crop', 
+                    title: 'Coffee Morning', 
+                    date: '2023-05-15',
+                    description: 'Sunday morning coffee dates'
+                }
             ],
             adventures: [
-                { type: 'photo', src: 'https://images.unsplash.com/photo-1559827260-dc66d52bef19?w=600&h=400&fit=crop', title: 'Mountain Hiking', date: '2023-06-15' },
-                { type: 'photo', src: 'https://images.unsplash.com/photo-1476514525535-07fb3214ae8f?w=600&h=400&fit=crop', title: 'Road Trip', date: '2023-07-20' },
-                { type: 'photo', src: 'https://images.unsplash.com/photo-1509316785289-025f54387624?w=600&h=400&fit=crop', title: 'City Explore', date: '2023-08-25' }
+                { 
+                    type: 'video', 
+                    src: 'https://www.w3schools.com/html/mov_bbb.mp4', 
+                    title: 'Mountain Hiking', 
+                    date: '2023-06-15',
+                    description: 'Reaching new heights together'
+                },
+                { 
+                    type: 'photo', 
+                    src: 'https://images.unsplash.com/photo-1559827260-dc66d52bef19?w=600&h=400&fit=crop', 
+                    title: 'Road Trip', 
+                    date: '2023-07-20',
+                    description: 'Adventure on the open road'
+                },
+                { 
+                    type: 'photo', 
+                    src: 'https://images.unsplash.com/photo-1509316785289-025f54387624?w=600&h=400&fit=crop', 
+                    title: 'City Explore', 
+                    date: '2023-08-25',
+                    description: 'Getting lost in new places'
+                },
+                { 
+                    type: 'video', 
+                    src: 'https://www.w3schools.com/html/movie.mp4', 
+                    title: 'Water Fun', 
+                    date: '2023-09-10',
+                    description: 'Splashing good times'
+                }
             ],
             sweetMoments: [
-                { type: 'photo', src: 'https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=600&h=400&fit=crop', title: 'Cuddle Time', date: '2023-09-10' },
-                { type: 'photo', src: 'https://images.unsplash.com/photo-1515372037251-f56c4a5a5c6b?w=600&h=400&fit=crop', title: 'Cooking Together', date: '2023-10-12' },
-                { type: 'photo', src: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=600&h=400&fit=crop', title: 'Movie Night', date: '2023-11-15' }
+                { 
+                    type: 'photo', 
+                    src: 'https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=600&h=400&fit=crop', 
+                    title: 'Cuddle Time', 
+                    date: '2023-10-12',
+                    description: 'Cozy moments together'
+                },
+                { 
+                    type: 'video', 
+                    src: 'https://www.w3schools.com/html/mov_bbb.mp4', 
+                    title: 'Laughing Together', 
+                    date: '2023-11-15',
+                    description: 'Our favorite sound - your laugh'
+                },
+                { 
+                    type: 'photo', 
+                    src: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=600&h=400&fit=crop', 
+                    title: 'Movie Night', 
+                    date: '2023-12-20',
+                    description: 'Netflix and cuddles'
+                },
+                { 
+                    type: 'video', 
+                    src: 'https://www.w3schools.com/html/movie.mp4', 
+                    title: 'Winter Walk', 
+                    date: '2024-01-10',
+                    description: 'Hand in hand in the snow'
+                }
             ]
         };
 
@@ -587,9 +707,30 @@
             const card = document.createElement('div');
             card.className = 'thumbnail-card';
             
-            const img = document.createElement('img');
-            img.src = item.src;
-            img.alt = item.title;
+            let mediaElement;
+            if (item.type === 'video') {
+                mediaElement = document.createElement('video');
+                mediaElement.src = item.src;
+                mediaElement.muted = true;
+                mediaElement.loop = true;
+                // Auto-play on hover
+                card.addEventListener('mouseenter', () => {
+                    mediaElement.play().catch(e => console.log('Video play failed:', e));
+                });
+                card.addEventListener('mouseleave', () => {
+                    mediaElement.pause();
+                });
+                
+                // Add video badge
+                const badge = document.createElement('div');
+                badge.className = 'video-badge';
+                badge.textContent = 'VIDEO';
+                card.appendChild(badge);
+            } else {
+                mediaElement = document.createElement('img');
+                mediaElement.src = item.src;
+                mediaElement.alt = item.title;
+            }
             
             const info = document.createElement('div');
             info.className = 'thumbnail-info';
@@ -598,7 +739,7 @@
                 <div class="thumbnail-date">${formatDate(item.date)}</div>
             `;
             
-            card.appendChild(img);
+            card.appendChild(mediaElement);
             card.appendChild(info);
             
             card.addEventListener('click', () => openFullscreen(item));
@@ -615,26 +756,37 @@
             const modal = document.getElementById('modal');
             const modalContent = document.getElementById('modalContent');
             
-            const img = document.createElement('img');
-            img.src = item.src;
-            img.alt = item.title;
+            let mediaElement;
+            if (item.type === 'video') {
+                mediaElement = document.createElement('video');
+                mediaElement.src = item.src;
+                mediaElement.controls = true;
+                mediaElement.autoplay = true;
+            } else {
+                mediaElement = document.createElement('img');
+                mediaElement.src = item.src;
+                mediaElement.alt = item.title;
+            }
             
-            modalContent.innerHTML = '';
-            modalContent.appendChild(img);
+            modalContent.innerHTML = '<button class="close-modal" onclick="closeModal()">×</button>';
+            modalContent.appendChild(mediaElement);
             modal.classList.add('active');
         }
 
-        function closeModal() {
+        function closeModal(event) {
+            if (event) {
+                event.stopPropagation();
+            }
             const modal = document.getElementById('modal');
             modal.classList.remove('active');
         }
 
         function playMemories() {
-            alert('▶ Playing all our beautiful memories... ❤️');
+            alert('▶ Playing all our beautiful memories... ❤️\n\nThis would play a special video montage of your best moments together!');
         }
 
         function showInfo() {
-            alert('ℹ Created with love for someone special! Every moment matters.');
+            alert('ℹ Himuflix - Created with love for someone special!\n\nEvery moment, every memory, every smile matters.\nYou are my favorite story.');
         }
 
         // Floating hearts
@@ -654,7 +806,7 @@
 
         // Add hearts periodically
         setInterval(() => {
-            if (Math.random() > 0.7) {
+            if (Math.random() > 0.6) {
                 createHeart();
             }
         }, 3000);
